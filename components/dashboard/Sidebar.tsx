@@ -1,6 +1,8 @@
 "use client";
-
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 export default function Sidebar() {
+  const pathname = usePathname();
   const menuItems = [
     { name: "Dashboard", href: "/dashboard", icon: "🔲" },
     { name: "My Tasks", href: "/dashboard/tasks", icon: "📋" },
@@ -26,6 +28,26 @@ export default function Sidebar() {
         <button className="w-full bg-[#635BFF] hover:bg-[#534be0] text-white font-semibold py-2.5 px-4 rounded-xl shadow-sm text-sm transition-all">
           New Project
         </button>
+
+        <nav className="space-y-1.5">
+          {menuItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                  isActive
+                    ? "bg-[#635BFF] text-white shadow-sm" // Style jika Aktif (Ungu)
+                    : "text-slate-600 hover:bg-slate-100 hover:text-[#0A2540]" // Style Biasa
+                }`}
+              >
+                <span className="text-base">{item.icon}</span>
+                <span>{item.name}</span>
+              </Link>
+            );
+          })}
+        </nav>
       </div>
     </aside>
   );
