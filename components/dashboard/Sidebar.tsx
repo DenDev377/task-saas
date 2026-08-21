@@ -1,13 +1,14 @@
 "use client";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { LayoutDashboard, ListTodo, Clock, Users } from "lucide-react";
 export default function Sidebar() {
   const pathname = usePathname();
   const menuItems = [
-    { name: "Dashboard", href: "/dashboard", icon: "🔲" },
-    { name: "My Tasks", href: "/dashboard/tasks", icon: "📋" },
-    { name: "Worklogs", href: "/dashboard/worklogs", icon: "🕒" },
-    { name: "Team Overview", href: "/dashboard/team", icon: "👥" },
+    { name: "Dashboard", href: "/dashboard", icon: <LayoutDashboard className="w-5 h-5" /> },
+    { name: "My Tasks", href: "/dashboard/tasks", icon: <ListTodo className="w-5 h-5" /> },
+    { name: "Worklogs", href: "/dashboard/worklogs", icon: <Clock className="w-5 h-5" /> },
+    { name: "Team Overview", href: "/dashboard/team", icon: <Users className="w-5 h-5" /> },
   ];
   return (
     <aside className="w-64 bg-s border-r bg-white border-slate-200/80 min-h-screem flex flex-col justify-between p-4 shrink-0">
