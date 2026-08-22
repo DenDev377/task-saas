@@ -1,3 +1,5 @@
+import { ListFilter, Plus } from "lucide-react";
+
 export default function Navbar() {
   return (
     <nav className="w-full bg-white border-b border-slate-200/80 shrink-0">
@@ -17,11 +19,13 @@ export default function Navbar() {
           <div className="relative">
             <input type="text" placeholder="Search" className="bg-slate-200 hover:bg-slate-100 text-slate-700 placeholder-slate-400 text-sm py-2.5 px-4 rounded-xl transition-all focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#635BFF]/20 focus:border-[#635BFF] border border-transparent" />
           </div>
-          <button className="bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold py-2.5 px-4 rounded-xl shadow-sm text-sm transition-all">
+          <button className="bg-slate-100 flex items-center gap-1.5 hover:bg-slate-200 text-slate-600 font-semibold py-2.5 px-4 rounded-xl shadow-sm text-sm transition-all">
+            <ListFilter className="w-4 h-4" />
             Status
           </button>
-          <button className="bg-[#635BFF] hover:bg-[#534be0] text-white font-semibold py-2.5 px-4 rounded-xl shadow-sm text-sm transition-all">
-            New Task
+          <button className="bg-[#635BFF] flex items-center gap-1.5 hover:bg-[#534be0] text-white font-semibold py-2.5 px-4 rounded-xl shadow-sm text-sm transition-all">
+            <Plus className="w-4 h-4" />
+            Task Baru
           </button>
         </div>
       </div>
