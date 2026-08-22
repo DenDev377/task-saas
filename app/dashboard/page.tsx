@@ -55,7 +55,7 @@ export default function DashboardPage() {
           {/* Table Header Area */}
           <div className="px-6 py-5 border-b border-slate-200/80 flex items-center justify-between">
             <h2 className="text-lg font-bold text-slate-800">Tugas Aktif</h2>
-            <button className="bg-[#635BFF] hover:bg-[#534be0] text-white font-semibold py-2.5 px-4 rounded-xl shadow-sm text-sm transition-all">
+            <button className="bg-neutral-50 hover:bg-neutral-100 text-[#635BFF] font-semibold py-2.5 px-4 rounded-xl text-sm transition-all">
               Lihat Semua
             </button>
 
@@ -114,9 +114,7 @@ export default function DashboardPage() {
         <div className="lg:col-span-1 bg-white border border-slate-200/80 rounded-xl shadow-sm p-6 flex flex-col h-full">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-bold text-slate-800">Aktivitas Terbaru</h2>
-            <button className="text-sm font-semibold text-[#635BFF] hover:text-[#534be0]">
-              Filter
-            </button>
+
           </div>
 
           <div className="flex-1 space-y-6">

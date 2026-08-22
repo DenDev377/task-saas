@@ -1,7 +1,7 @@
 "use client";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { LayoutDashboard, ListTodo, Clock, Users } from "lucide-react";
+import { LayoutDashboard, ListTodo, Clock, Users, Settings, LogOut } from "lucide-react";
 export default function Sidebar() {
   const pathname = usePathname();
   const menuItems = [
@@ -38,8 +38,8 @@ export default function Sidebar() {
                 key={item.name}
                 href={item.href}
                 className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${isActive
-                    ? "bg-[#635BFF] text-white shadow-sm" // Style jika Aktif (Ungu)
-                    : "text-slate-600 hover:bg-slate-100 hover:text-[#0A2540]" // Style Biasa
+                  ? "bg-[#635BFF] text-white shadow-sm" // Style jika Aktif (Ungu)
+                  : "text-slate-600 hover:bg-slate-100 hover:text-[#0A2540]" // Style Biasa
                   }`}
               >
                 <span className="text-base">{item.icon}</span>
@@ -48,6 +48,25 @@ export default function Sidebar() {
             );
           })}
         </nav>
+
+
+      </div>
+
+      <div className="border-t border-slate-200/80 pt-4">
+        <Link
+          href="/dashboard/settings"
+          className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 hover:text-[#0A2540] transition-all"
+        >
+          <Settings className="w-5 h-5" />
+          <span>Settings</span>
+        </Link>
+        <button
+          className="w-full flex items-center gap-3 px-3.5 py-2 rounded-xl text-sm font-semibold text-red-500 hover:bg-red-50 transition-all"
+        >
+          <LogOut className="w-5 h-5" />
+          <span>Logout</span>
+        </button>
+
       </div>
     </aside>
   );
