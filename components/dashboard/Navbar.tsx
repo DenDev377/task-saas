@@ -2,7 +2,7 @@ import { ListFilter, Plus } from "lucide-react";
 
 export default function Navbar() {
   return (
-    <nav className="w-full bg-white border-b border-slate-200/80 shrink-0">
+    <nav className="w-full bg-white border-b border-slate-250 shrink-0">
       <div className="max-w-full px-4 py-6 sm:px-6 lg:px-8 justify-between flex items-center">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>

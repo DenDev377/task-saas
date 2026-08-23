@@ -11,7 +11,7 @@ export default function Sidebar() {
     { name: "Team Overview", href: "/dashboard/team", icon: <Users className="w-5 h-5" /> },
   ];
   return (
-    <aside className="w-80 bg-s border-r bg-white border-slate-200/80 min-h-screem flex flex-col justify-between p-4 shrink-0">
+    <aside className="w-80 border-r bg-white border-slate-250 min-h-screen flex flex-col justify-between p-4 shrink-0">
       <div className="space-y-6">
         <div className="flex items-center gap-3 px-2 pt-2">
           <div className="w-10 h-10 bg-[#635BFF] rounded-full flex items-center justify-center text-white font-bold text-sm shadow-sm">
@@ -52,7 +52,7 @@ export default function Sidebar() {
 
       </div>
 
-      <div className="border-t border-slate-200/80 pt-4">
+      <div className="border-t border-slate-250 pt-4 -mx-4 px-4">
         <Link
           href="/dashboard/settings"
           className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 hover:text-[#0A2540] transition-all"

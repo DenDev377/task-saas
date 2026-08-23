@@ -8,7 +8,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
         {/* Card 1 */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200/80 p-6 flex flex-col justify-between min-h-[130px]">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-250 p-6 flex flex-col justify-between min-h-[130px]">
           <div className="flex justify-between items-start">
             <h3 className="text-sm font-semibold text-slate-500">Total Tugas</h3>
             <div className="p-2 bg-[#635BFF]/10 text-[#635BFF] rounded-lg">
@@ -21,7 +21,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Card 2 */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200/80 p-6 flex flex-col justify-between min-h-[130px]">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-250 p-6 flex flex-col justify-between min-h-[130px]">
           <div className="flex justify-between items-start">
             <h3 className="text-sm font-semibold text-slate-500">Total Jam Kerja</h3>
             <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
@@ -34,7 +34,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Card 3 */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200/80 p-6 flex flex-col justify-between min-h-[130px]">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-250 p-6 flex flex-col justify-between min-h-[130px]">
           <div className="flex justify-between items-start">
             <h3 className="text-sm font-semibold text-slate-500">Tingkat Penyelesaian</h3>
             <div className="p-2 bg-amber-50 text-amber-600 rounded-lg">
@@ -51,9 +51,9 @@ export default function DashboardPage() {
       <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
 
 
-        <div className="lg:col-span-2 bg-white border border-slate-200/80 rounded-xl shadow-sm overflow-hidden">
+        <div className="lg:col-span-2 bg-white border border-slate-250 rounded-xl shadow-sm overflow-hidden">
           {/* Table Header Area */}
-          <div className="px-6 py-5 border-b border-slate-200/80 flex items-center justify-between">
+          <div className="px-6 py-5 border-b border-slate-250 flex items-center justify-between">
             <h2 className="text-lg font-bold text-slate-800">Tugas Aktif</h2>
             <button className="bg-neutral-50 hover:bg-neutral-100 text-[#635BFF] font-semibold py-2.5 px-4 rounded-xl text-sm transition-all">
               Lihat Semua
@@ -111,7 +111,7 @@ export default function DashboardPage() {
         </div>
 
 
-        <div className="lg:col-span-1 bg-white border border-slate-200/80 rounded-xl shadow-sm p-6 flex flex-col h-full">
+        <div className="lg:col-span-1 bg-white border border-slate-250 rounded-xl shadow-sm p-6 flex flex-col h-full">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-bold text-slate-800">Aktivitas Terbaru</h2>
 
@@ -152,7 +152,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <button className="w-full mt-6 py-2.5 border border-slate-200/80 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
+          <button className="w-full mt-6 py-2.5 border border-slate-250 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
             Lihat Semua Aktivitas
           </button>
         </div>
