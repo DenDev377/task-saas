@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google"; // 1. Import Inter Font
 import "./globals.css";
+import NextAuthProvider from "@/components/NextAuthProvider";
 
 // 2. Inisialisasi Font Inter
 const inter = Inter({
@@ -24,7 +25,9 @@ export default function RootLayout({
       <body
         className={`${inter.className} bg-[#F8FAFC] text-[#0A2540] antialiased`}
       >
-        {children}
+        <NextAuthProvider>
+          {children}
+        </NextAuthProvider>
       </body>
     </html>
   );

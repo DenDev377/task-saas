@@ -11,7 +11,7 @@ function createPrismaClient() {
         port: Number(process.env.MYSQL_PORT ?? 3306),
         user: process.env.MYSQL_USER ?? "root",
         password: process.env.MYSQL_PASSWORD ?? "",
-        database: process.env.MYSQL_DATABASE ?? "next_auth_db",
+        database: process.env.MYSQL_DATABASE ?? "saas_db",
         connectionLimit: 5,
     })
     return new PrismaClient({ adapter })
