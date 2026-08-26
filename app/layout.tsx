@@ -3,14 +3,13 @@ import { Inter } from "next/font/google"; // 1. Import Inter Font
 import "./globals.css";
 import NextAuthProvider from "@/components/NextAuthProvider";
 
-// 2. Inisialisasi Font Inter
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
-  title: "Task SaaS - Antigravity",
+  title: "Task SaaS",
   description: "Modern Task & Worklog Management SaaS",
 };
 
@@ -21,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.variable}>
-      {/* 3. Terapkan Font Inter, BG Neutral (#F8FAFC), dan Text Color (#0A2540) */}
+
       <body
         className={`${inter.className} bg-[#F8FAFC] text-[#0A2540] antialiased`}
       >
