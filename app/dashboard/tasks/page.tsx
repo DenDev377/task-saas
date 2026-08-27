@@ -6,6 +6,38 @@ export default function TaskPage() {
 
     const [activeTab, setActiveTab] = useState("all")
 
+    const task = [{
+        id: 1,
+        title: "Finalize Q3 Marketing Strategy Presentation",
+        category: "Marketing",
+        priority: "High Priority",
+        dueDate: "Oct 15, 2026",
+        avatars: ["https:/i.pravatar.cc/150?u=1"],
+        complete: false,
+        status: "In Progress",
+    },
+    {
+        id: 2,
+        title: "Review Design System Component Tokens",
+        category: "Design",
+        priority: "Medium Priority",
+        dueDate: "Oct 18, 2026",
+        avatars: ["https:/i.pravatar.cc/150?u=2"],
+        complete: false,
+        status: "In Progress",
+    },
+    {
+        id: 3,
+        title: "Implement User Authentication Flow",
+        category: "Development",
+        priority: "High Priority",
+        dueDate: "Oct 20, 2026",
+        avatars: ["https:/i.pravatar.cc/150?u=3"],
+        complete: true,
+        status: "Done",
+    }
+    ]
+
     const menuItems = [
         {
             label: "Semua Tugas",
@@ -67,6 +99,10 @@ export default function TaskPage() {
                         </select>
                     </div>
                 </div>
+            </div>
+            <div className="flex flex-col gap-3">
+
+
             </div>
 
         </div>

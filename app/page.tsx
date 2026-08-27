@@ -97,7 +97,7 @@ export default function Home() {
       <footer className="border-t border-slate-200/80 bg-white py-6">
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500 gap-3">
           <p>
-            © 2026 TaskSaaS Antigravity. Built with Next.js, Prisma, & NextAuth.
+            © 2026 TaskSaaS. Built with Next.js, Prisma, & NextAuth.
           </p>
           <div className="flex gap-4">
             <span className="hover:text-[#635BFF] cursor-pointer">Privacy</span>
