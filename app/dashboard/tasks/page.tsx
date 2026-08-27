@@ -13,7 +13,7 @@ export default function TaskPage() {
         priority: "High Priority",
         dueDate: "Oct 15, 2026",
         avatars: ["https:/i.pravatar.cc/150?u=1"],
-        complete: false,
+        completed: false,
         status: "In Progress",
     },
     {
@@ -23,7 +23,7 @@ export default function TaskPage() {
         priority: "Medium Priority",
         dueDate: "Oct 18, 2026",
         avatars: ["https:/i.pravatar.cc/150?u=2"],
-        complete: false,
+        completed: false,
         status: "In Progress",
     },
     {
@@ -33,7 +33,7 @@ export default function TaskPage() {
         priority: "High Priority",
         dueDate: "Oct 20, 2026",
         avatars: ["https:/i.pravatar.cc/150?u=3"],
-        complete: true,
+        completed: true,
         status: "Done",
     }
     ]
@@ -66,7 +66,7 @@ export default function TaskPage() {
                 </button>
             </div>
 
-            <div className="mt-8 bg-white border border-slate-250 rounded-xl shadow-sm p-6 h-20 flex justify-between items-center">
+            <div className="mt-8 bg-white border border-slate-250 rounded-xl shadow-sm p-6 h-20 flex justify-between items-center mb-8">
                 <div className="flex bg-slate-100/80 p-1 rounded-lg gap-1">
                     {menuItems.map((item) => (
                         <button
@@ -101,6 +101,57 @@ export default function TaskPage() {
                 </div>
             </div>
             <div className="flex flex-col gap-3">
+                {task.map((task) => (
+                    <div
+                        key={task.id}
+                        className={`bg-white border border-slate-250 rounded-xl p-4 flex items-center justify-between shadow-sm transition-all ${task.completed ? "opacity-60" : ""
+                            }`}
+                    >
+                        <div className="flex items-center gap-4">
+                            <button
+                                className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all ${task.completed
+                                    ? "bg-[#635BFF] border-[#635BFF] text-white"
+                                    : "border-slate-300 hover:border-slate-400"
+                                    }`}
+                            >
+                                {task.completed && <Check size={14} strokeWidth={3} />}
+                            </button>
+                            <div className="flex flex-col gap-1.5">
+                                <span className={`font-semibold text-slate-800 text-sm ${task.completed ? "line-through text-slate-400" : ""
+                                    }`}>
+                                    {task.title}
+                                </span>
+                                <div className="flex items-center gap-2 flex-wrap text-xs">
+                                    {/* Category Tag */}
+                                    <span className="bg-indigo-50 text-indigo-600 font-semibold px-2 py-0.5 rounded uppercase text-[10px] tracking-wider">
+                                        {task.category}
+                                    </span>
+
+                                    {/* Priority Tag */}
+                                    {task.priority && (
+                                        <span
+                                            className={`font-semibold px-2 py-0.5 rounded text-[10px] tracking-wider flex items-center gap-1 ${task.priority.includes("HIGH")
+                                                ? "bg-red-50 text-red-500"
+                                                : "bg-slate-100 text-slate-500"
+                                                }`}
+                                        >
+                                            • {task.priority}
+                                        </span>
+                                    )}
+
+                                    {/* Due Date */}
+                                    <span className="text-slate-400 flex items-center gap-1">
+                                        <Calendar size={12} />
+                                        {task.dueDate}
+                                    </span>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                ))}
 
 
             </div>
