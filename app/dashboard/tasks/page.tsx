@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react"
-import { Plus, SlidersHorizontal, Calendar, Check } from "lucide-react";
+import { Plus, SlidersHorizontal, Calendar, Check, MoreHorizontal, ChevronDown } from "lucide-react";
 
 
 export default function TaskPage() {
@@ -8,37 +8,38 @@ export default function TaskPage() {
 
     const [activeTab, setActiveTab] = useState("all")
 
-    const task = [{
-        id: 1,
-        title: "Finalize Q3 Marketing Strategy Presentation",
-        category: "Marketing",
-        priority: "High Priority",
-        dueDate: "Oct 15, 2026",
-        avatars: ["https:/i.pravatar.cc/150?u=1"],
-        completed: false,
-        status: "In Progress",
-    },
-    {
-        id: 2,
-        title: "Review Design System Component Tokens",
-        category: "Design",
-        priority: "Medium Priority",
-        dueDate: "Oct 18, 2026",
-        avatars: ["https:/i.pravatar.cc/150?u=2"],
-        completed: false,
-        status: "In Progress",
-    },
-    {
-        id: 3,
-        title: "Implement User Authentication Flow",
-        category: "Development",
-        priority: "High Priority",
-        dueDate: "Oct 20, 2026",
-        avatars: ["https:/i.pravatar.cc/150?u=3"],
-        completed: true,
-        status: "Done",
-    }
-    ]
+    const [tasks, setTasks] = useState([
+        {
+            id: 1,
+            title: "Finalize Q3 Marketing Strategy Presentation",
+            category: "Marketing",
+            priority: "High Priority",
+            dueDate: "Oct 15, 2026",
+            avatars: ["https://i.pravatar.cc/150?u=1"],
+            completed: false,
+            status: "In Progress",
+        },
+        {
+            id: 2,
+            title: "Review Design System Component Tokens",
+            category: "Design",
+            priority: "Medium Priority",
+            dueDate: "Oct 18, 2026",
+            avatars: ["https://i.pravatar.cc/150?u=2", "https://i.pravatar.cc/150?u=4"],
+            completed: false,
+            status: "In Progress",
+        },
+        {
+            id: 3,
+            title: "Implement User Authentication Flow",
+            category: "Development",
+            priority: "High Priority",
+            dueDate: "Oct 20, 2026",
+            avatars: ["https://i.pravatar.cc/150?u=3"],
+            completed: true,
+            status: "Done",
+        }
+    ])
 
     const menuItems = [
         {
@@ -54,6 +55,28 @@ export default function TaskPage() {
             value: "completed",
         },
     ]
+
+    const toggleTaskCompletion = (taskId: number) => {
+        setTasks(tasks.map(task =>
+            task.id === taskId ? { ...task, completed: !task.completed, status: task.completed ? "In Progress" : "Done" } : task
+        ))
+    }
+
+    const filteredTasks = tasks.filter(task => {
+        if (activeTab === "all") return true;
+        if (activeTab === "completed") return task.completed;
+        if (activeTab === "my-tasks") return true;
+        return true;
+    })
+
+    const getPriorityStyle = (priority: string) => {
+        const p = priority.toLowerCase();
+        if (p.includes("high")) return "bg-red-50 text-red-500";
+        if (p.includes("medium")) return "bg-amber-50 text-amber-600";
+        if (p.includes("low")) return "bg-green-50 text-green-600";
+        return "bg-slate-100 text-slate-500";
+    }
+
     return (
         <div className="flex flex-col max-w-full">
             <div className="flex justify-between">
@@ -62,19 +85,19 @@ export default function TaskPage() {
                     <p className="text-slate-600">Kelola tugas Anda di sini</p>
                 </div>
 
-                <button className="bg-[#635BFF] flex items-center gap-1.5 hover:bg-[#534be0] text-white font-semibold py-2.5 px-4 rounded-xl shadow-sm text-sm transition-all">
+                <button className="bg-[#635BFF] flex items-center gap-1.5 hover:bg-[#534be0] text-white font-semibold py-2.5 px-4 rounded-xl shadow-sm text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#635BFF]/50 focus:ring-offset-2">
                     <Plus className="w-4 h-4" />
                     Tambah Tugas
                 </button>
             </div>
 
-            <div className="mt-8 bg-white border border-slate-250 rounded-xl shadow-sm p-6 h-20 flex justify-between items-center mb-8">
-                <div className="flex bg-slate-100/80 p-1 rounded-lg gap-1">
+            <div className="mt-8 bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col md:flex-row justify-between md:items-center gap-4 mb-8">
+                <div className="flex bg-slate-100 p-1 rounded-lg gap-1 overflow-x-auto w-full md:w-auto">
                     {menuItems.map((item) => (
                         <button
                             key={item.value}
                             onClick={() => setActiveTab(item.value)}
-                            className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${activeTab === item.value
+                            className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all whitespace-nowrap ${activeTab === item.value
                                 ? "bg-white text-slate-800 shadow-sm"
                                 : "text-slate-500 hover:text-slate-700"
                                 }`}
@@ -86,80 +109,102 @@ export default function TaskPage() {
 
                 <div className="flex items-center gap-3">
                     <div className="relative flex items-center">
-                        <SlidersHorizontal size={14} className="absolute left-3 text-slate-400" />
-                        <select className="pl-8 py-1.5 px-4 bg-white border border-slate-250 rounded-lg text-slate-700 font-medium appearance-none focus:outline-none focus:ring-indigo-500/20">
-                            <option> Status: All</option>
-
+                        <SlidersHorizontal size={14} className="absolute left-3 text-slate-400 pointer-events-none" />
+                        <select className="pl-8 pr-8 py-1.5 text-sm bg-white border border-slate-200 hover:border-slate-300 rounded-lg text-slate-700 font-medium appearance-none focus:outline-none focus:ring-2 focus:ring-[#635BFF]/20 cursor-pointer transition-colors">
+                            <option value="all">Status: All</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="done">Done</option>
                         </select>
-
-
+                        <ChevronDown size={14} className="absolute right-3 text-slate-400 pointer-events-none" />
                     </div>
                     <div className="relative flex items-center">
-                        <SlidersHorizontal size={14} className="absolute left-3 text-slate-400" />
-                        <select className="pl-8 pr-8 py-1.5 bg-white border border-slate-250 rounded-lg text-slate-700 font-medium appearance-none focus:outline-none focus:ring-indigo-500/20">
-                            <option>Sort by: Due Date</option>
+                        <SlidersHorizontal size={14} className="absolute left-3 text-slate-400 pointer-events-none" />
+                        <select className="pl-8 pr-8 py-1.5 text-sm bg-white border border-slate-200 hover:border-slate-300 rounded-lg text-slate-700 font-medium appearance-none focus:outline-none focus:ring-2 focus:ring-[#635BFF]/20 cursor-pointer transition-colors">
+                            <option value="due-date">Sort by: Due Date</option>
+                            <option value="priority">Sort by: Priority</option>
+                            <option value="title">Sort by: Title</option>
                         </select>
+                        <ChevronDown size={14} className="absolute right-3 text-slate-400 pointer-events-none" />
                     </div>
                 </div>
             </div>
+
             <div className="flex flex-col gap-3">
-                {task.map((task) => (
-                    <div
-                        key={task.id}
-                        className={`bg-white border border-slate-250 rounded-xl p-4 flex items-center justify-between shadow-sm transition-all ${task.completed ? "opacity-60" : ""
-                            }`}
-                    >
-                        <div className="flex items-center gap-4">
-                            <button
-                                className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all ${task.completed
-                                    ? "bg-[#635BFF] border-[#635BFF] text-white"
-                                    : "border-slate-300 hover:border-slate-400"
-                                    }`}
-                            >
-                                {task.completed && <Check size={14} strokeWidth={3} />}
-                            </button>
-                            <div className="flex flex-col gap-1.5">
-                                <span className={`font-semibold text-slate-800 text-sm ${task.completed ? "line-through text-slate-400" : ""
-                                    }`}>
-                                    {task.title}
-                                </span>
-                                <div className="flex items-center gap-2 flex-wrap text-xs">
-                                    {/* Category Tag */}
-                                    <span className="bg-indigo-50 text-indigo-600 font-semibold px-2 py-0.5 rounded uppercase text-[10px] tracking-wider">
-                                        {task.category}
+                {filteredTasks.length > 0 ? (
+                    filteredTasks.map((task) => (
+                        <div
+                            key={task.id}
+                            className={`bg-white border hover:border-[#635BFF]/30 border-slate-200 rounded-xl p-4 flex items-center justify-between shadow-sm transition-all group ${task.completed ? "opacity-60 hover:opacity-100" : ""
+                                }`}
+                        >
+                            <div className="flex items-center gap-4">
+                                <button
+                                    onClick={() => toggleTaskCompletion(task.id)}
+                                    className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all flex-shrink-0 ${task.completed
+                                        ? "bg-[#635BFF] border-[#635BFF] text-white"
+                                        : "border-slate-300 hover:border-[#635BFF]"
+                                        }`}
+                                >
+                                    {task.completed && <Check size={14} strokeWidth={3} />}
+                                </button>
+                                <div className="flex flex-col gap-1.5">
+                                    <span className={`font-semibold text-slate-800 text-sm ${task.completed ? "line-through text-slate-400" : ""
+                                        }`}>
+                                        {task.title}
                                     </span>
-
-                                    {/* Priority Tag */}
-                                    {task.priority && (
-                                        <span
-                                            className={`font-semibold px-2 py-0.5 rounded text-[10px] tracking-wider flex items-center gap-1 ${task.priority.includes("HIGH")
-                                                ? "bg-red-50 text-red-500"
-                                                : "bg-slate-100 text-slate-500"
-                                                }`}
-                                        >
-                                            • {task.priority}
+                                    <div className="flex items-center gap-2 flex-wrap text-xs">
+                                        <span className="bg-indigo-50 text-indigo-600 font-semibold px-2 py-0.5 rounded uppercase text-[10px] tracking-wider">
+                                            {task.category}
                                         </span>
-                                    )}
 
-                                    {/* Due Date */}
-                                    <span className="text-slate-400 flex items-center gap-1">
-                                        <Calendar size={12} />
-                                        {task.dueDate}
-                                    </span>
+                                        {task.priority && (
+                                            <span
+                                                className={`font-semibold px-2 py-0.5 rounded text-[10px] tracking-wider flex items-center gap-1 ${getPriorityStyle(task.priority)}`}
+                                            >
+                                                • {task.priority}
+                                            </span>
+                                        )}
+
+                                        <span className="text-slate-400 flex items-center gap-1">
+                                            <Calendar size={12} />
+                                            {task.dueDate}
+                                        </span>
+                                    </div>
                                 </div>
-
                             </div>
 
+                            <div className="flex items-center gap-4">
+                                {task.avatars && task.avatars.length > 0 && (
+                                    <div className="flex -space-x-2 hidden sm:flex">
+                                        {task.avatars.map((avatar, idx) => (
+                                            <img
+                                                key={idx}
+                                                src={avatar}
+                                                alt="Assignee"
+                                                className="w-7 h-7 rounded-full border-2 border-white object-cover shadow-sm bg-slate-100"
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+
+                                <button className="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-100 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+                                    <MoreHorizontal size={18} />
+                                </button>
+                            </div>
                         </div>
-
+                    ))
+                ) : (
+                    <div className="p-8 text-center text-slate-500 bg-white border border-slate-200 border-dashed rounded-xl overflow-hidden shadow-sm">
+                        <div className="flex flex-col items-center justify-center">
+                            <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-3">
+                                <Check size={20} className="text-slate-400" />
+                            </div>
+                            <p className="font-medium text-slate-700">Tidak ada tugas ditemukan</p>
+                            <p className="text-sm mt-1">Coba gunakan filter yang berbeda atau tambahkan tugas baru.</p>
+                        </div>
                     </div>
-                ))}
-
-
+                )}
             </div>
-
         </div>
-
-
     )
 }
