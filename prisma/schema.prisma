@@ -1,27 +1,62 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// This is your Prisma schema file
 
 generator client {
-  provider     = "prisma-client"
-  output       = "../app/generated/prisma"
-  moduleFormat = "cjs"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql",
-  url      = env("DATABASE_URL")
+  provider = "mysql"
+  
 }
 
-enum Role{
+enum Role {
   ADMIN
   USER
 }
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum Status {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+model Task {
+  id        Int       @id @default(autoincrement())
+  title     String
+  category  String?
+  priority  Priority  @default(MEDIUM)
+  dueDate   DateTime?
+  status    Status    @default(PENDING)
+  completed Boolean   @default(false)
+
+  // Relasi Pembuat Task (Admin/Lead)
+  createdById Int
+  createdBy   User     @relation("CreatedTasks", fields: [createdById], references: [id])
+
+  // Relasi Pengerja Task (Member)
+  assigneeId  Int
+  assignee    User     @relation("AssignedTasks", fields: [assigneeId], references: [id])
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  role      Role     @default(USER) 
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  password String
+  role     Role   @default(ADMIN)
+
+  createdTasks  Task[] @relation("CreatedTasks")
+  assignedTasks Task[] @relation("AssignedTasks")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

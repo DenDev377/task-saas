@@ -1,8 +1,8 @@
-import { PrismaClient } from "../app/generated/prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 
 const globalForPrisma = globalThis as unknown as {
-    prisma: PrismaClient | undefined;
+    prismaBaru: PrismaClient | undefined;
 }
 
 function createPrismaClient() {
@@ -17,6 +17,6 @@ function createPrismaClient() {
     return new PrismaClient({ adapter })
 }
 
-export const prisma = globalForPrisma.prisma ?? createPrismaClient();
+export const prisma = globalForPrisma.prismaBaru ?? createPrismaClient();
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+if (process.env.NODE_ENV !== "production") globalForPrisma.prismaBaru = prisma;

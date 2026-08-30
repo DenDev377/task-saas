@@ -1,12 +1,13 @@
 "use client"
 import { useState } from "react"
 import { Plus, SlidersHorizontal, Calendar, Check, MoreHorizontal, ChevronDown } from "lucide-react";
-
+import TaskModal from "@/components/dashboard/TaskModal";
 
 export default function TaskPage() {
 
 
     const [activeTab, setActiveTab] = useState("all")
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     const [tasks, setTasks] = useState([
         {
@@ -85,7 +86,10 @@ export default function TaskPage() {
                     <p className="text-slate-600">Kelola tugas Anda di sini</p>
                 </div>
 
-                <button className="bg-[#635BFF] flex items-center gap-1.5 hover:bg-[#534be0] text-white font-semibold py-2.5 px-4 rounded-xl shadow-sm text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#635BFF]/50 focus:ring-offset-2">
+                <button 
+                    onClick={() => setIsModalOpen(true)}
+                    className="bg-[#635BFF] flex items-center gap-1.5 hover:bg-[#534be0] text-white font-semibold py-2.5 px-4 rounded-xl shadow-sm text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#635BFF]/50 focus:ring-offset-2"
+                >
                     <Plus className="w-4 h-4" />
                     Tambah Tugas
                 </button>
@@ -205,6 +209,11 @@ export default function TaskPage() {
                     </div>
                 )}
             </div>
+
+            <TaskModal 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+            />
         </div>
     )
 }
