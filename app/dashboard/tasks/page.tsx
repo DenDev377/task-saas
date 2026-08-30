@@ -78,7 +78,7 @@ export default function TaskPage() {
     }
 
     return (
-        <div className="flex flex-col max-w-full">
+        <div className="flex flex-col max-w-full mx-auto">
             <div className="flex justify-between">
                 <div>
                     <h1 className=" font-bold text-slate-800">Halaman Tugas</h1>
@@ -118,7 +118,7 @@ export default function TaskPage() {
                         <ChevronDown size={14} className="absolute right-3 text-slate-400 pointer-events-none" />
                     </div>
                     <div className="relative flex items-center">
-                        <SlidersHorizontal size={14} className="absolute left-3 text-slate-400 pointer-events-none" />
+                        <Calendar size={14} className="absolute left-3 text-slate-400 pointer-events-none" />
                         <select className="pl-8 pr-8 py-1.5 text-sm bg-white border border-slate-200 hover:border-slate-300 rounded-lg text-slate-700 font-medium appearance-none focus:outline-none focus:ring-2 focus:ring-[#635BFF]/20 cursor-pointer transition-colors">
                             <option value="due-date">Sort by: Due Date</option>
                             <option value="priority">Sort by: Priority</option>
