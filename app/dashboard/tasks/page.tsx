@@ -29,6 +29,28 @@ export default function TaskPage() {
         fetchTasks()
     }, [])
 
+    // FUNGSI MENGHAPUS TUGAS
+    const deleteTask = async (id: number) => {
+        // Jendela konfirmasi bawaan browser
+        if (!window.confirm("Apakah Anda yakin ingin menghapus tugas ini?")) return;
+
+        try {
+            const res = await fetch(`/api/tasks/${id}`, {
+                method: "DELETE" // Memanggil blok export async function DELETE
+            });
+
+            if (res.ok) {
+
+                setTasks(tasks.filter((t) => t.id !== id));
+            } else {
+                alert("Gagal menghapus tugas dari server.");
+            }
+        } catch (error) {
+            alert("Terjadi masalah sistem lokal saat menghapus.");
+        }
+    }
+
+
     const menuItems = [
         {
             label: "Semua Tugas",
@@ -178,9 +200,14 @@ export default function TaskPage() {
                                 )}
 
 
-                                <button className="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-100 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
-                                    <MoreHorizontal size={18} />
+
+                                <button
+                                    onClick={() => deleteTask(task.id)}
+                                    className="text-red-400 font-semibold hover:text-red-600 p-2 text-xs rounded-lg hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+                                >
+                                    Hapus
                                 </button>
+
                             </div>
                         </div>
                     ))
