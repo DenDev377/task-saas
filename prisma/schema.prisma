@@ -53,6 +53,7 @@ model User {
   email    String @unique
   password String
   role     Role   @default(ADMIN)
+  avatar   String @default("https://mockmind-api.uifaces.co/content/human/80.jpg")
 
   createdTasks  Task[] @relation("CreatedTasks")
   assignedTasks Task[] @relation("AssignedTasks")

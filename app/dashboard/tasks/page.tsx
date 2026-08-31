@@ -1,46 +1,33 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Plus, SlidersHorizontal, Calendar, Check, MoreHorizontal, ChevronDown } from "lucide-react";
 import TaskModal from "@/components/dashboard/TaskModal";
 
 export default function TaskPage() {
-
-
     const [activeTab, setActiveTab] = useState("all")
     const [isModalOpen, setIsModalOpen] = useState(false)
 
-    const [tasks, setTasks] = useState([
-        {
-            id: 1,
-            title: "Finalize Q3 Marketing Strategy Presentation",
-            category: "Marketing",
-            priority: "High Priority",
-            dueDate: "Oct 15, 2026",
-            avatars: ["https://i.pravatar.cc/150?u=1"],
-            completed: false,
-            status: "In Progress",
-        },
-        {
-            id: 2,
-            title: "Review Design System Component Tokens",
-            category: "Design",
-            priority: "Medium Priority",
-            dueDate: "Oct 18, 2026",
-            avatars: ["https://i.pravatar.cc/150?u=2", "https://i.pravatar.cc/150?u=4"],
-            completed: false,
-            status: "In Progress",
-        },
-        {
-            id: 3,
-            title: "Implement User Authentication Flow",
-            category: "Development",
-            priority: "High Priority",
-            dueDate: "Oct 20, 2026",
-            avatars: ["https://i.pravatar.cc/150?u=3"],
-            completed: true,
-            status: "Done",
+    const [tasks, setTasks] = useState<any[]>
+        ([])
+    const [loading, setLoading] = useState(true)
+
+    const fetchTasks = async () => {
+        try {
+            const res = await fetch("/api/tasks")
+            const data = await res.json()
+            if (res.ok) {
+                setTasks(data)
+            }
+        } catch (error) {
+            console.error("Gagal terhubung ke API task", error)
+        } finally {
+            setLoading(false)
         }
-    ])
+    }
+
+    useEffect(() => {
+        fetchTasks()
+    }, [])
 
     const menuItems = [
         {
@@ -86,7 +73,7 @@ export default function TaskPage() {
                     <p className="text-slate-600">Kelola tugas Anda di sini</p>
                 </div>
 
-                <button 
+                <button
                     onClick={() => setIsModalOpen(true)}
                     className="bg-[#635BFF] flex items-center gap-1.5 hover:bg-[#534be0] text-white font-semibold py-2.5 px-4 rounded-xl shadow-sm text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#635BFF]/50 focus:ring-offset-2"
                 >
@@ -171,25 +158,25 @@ export default function TaskPage() {
 
                                         <span className="text-slate-400 flex items-center gap-1">
                                             <Calendar size={12} />
-                                            {task.dueDate}
+                                            {task.dueDate ? new Date(task.dueDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : "No Due Date"}
                                         </span>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="flex items-center gap-4">
-                                {task.avatars && task.avatars.length > 0 && (
+
+                                {task.assignee?.avatar && (
                                     <div className="flex -space-x-2 hidden sm:flex">
-                                        {task.avatars.map((avatar, idx) => (
-                                            <img
-                                                key={idx}
-                                                src={avatar}
-                                                alt="Assignee"
-                                                className="w-7 h-7 rounded-full border-2 border-white object-cover shadow-sm bg-slate-100"
-                                            />
-                                        ))}
+                                        <img
+                                            src={task.assignee.avatar}
+                                            alt={task.assignee.name || "Assignee"}
+                                            title={task.assignee.name || "User"}
+                                            className="w-7 h-7 rounded-full border-2 border-white object-cover shadow-sm bg-slate-100"
+                                        />
                                     </div>
                                 )}
+
 
                                 <button className="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-100 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
                                     <MoreHorizontal size={18} />
@@ -210,9 +197,9 @@ export default function TaskPage() {
                 )}
             </div>
 
-            <TaskModal 
-                isOpen={isModalOpen} 
-                onClose={() => setIsModalOpen(false)} 
+            <TaskModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
             />
         </div>
     )

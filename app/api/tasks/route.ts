@@ -45,3 +45,34 @@ export async function POST(req: Request) {
         }, { status: 500 })
     }
 }
+
+// GET /api/tasks
+export async function GET(req: Request) {
+    try {
+        const session = await getServerSession(authOptions);
+        if (!session?.user?.id) {
+            return NextResponse.json({
+                message: "Anda belum login."
+            }, { status: 401 })
+
+        }
+        const userTasks = await prisma.task.findMany({
+            where: {
+                assigneeId:
+                    parseInt(session.user.id as string)
+            },
+            include: {
+                assignee: true,
+            },
+            orderBy: {
+                createdAt: "desc"
+            }
+        })
+        return NextResponse.json(userTasks)
+    } catch (error) {
+        console.error("[GET_TASKS_ERROR]", error)
+        return NextResponse.json({
+            message: "Gagal mengambil data"
+        }, { status: 500 })
+    }
+}

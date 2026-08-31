@@ -1,7 +1,30 @@
 "use client"
-
+import { useState, useEffect } from "react"
 import { ClipboardList, Clock, TrendingUp } from "lucide-react";
 export default function DashboardPage() {
+
+  const [task, setTask] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchTask = async () => {
+      try {
+        const res = await fetch('/api/tasks')
+        const data = await res.json();
+
+        if (res.ok) {
+          setTask(data)
+        }
+      } catch (error) {
+        console.error("Gagal terhubung ke API", error)
+      }
+    }
+    fetchTask()
+
+
+  }, [])
+  const totalTugas = task.length;
+
+  const tugasSelesai = task.filter((t: any) => t.completed === true).length;
+  const progressPersen = totalTugas === 0 ? 0 : Math.round((tugasSelesai / totalTugas) * 100)
   return (
     <div className="max-w-full mx-auto w-full flex flex-col pb-8">
       {/*Card statistik */}
@@ -16,7 +39,7 @@ export default function DashboardPage() {
             </div>
           </div>
           <div>
-            <p className="text-3xl font-bold text-slate-900 mt-2">12</p>
+            <p className="text-3xl font-bold text-slate-900 mt-2">{totalTugas}</p>
           </div>
         </div>
 
