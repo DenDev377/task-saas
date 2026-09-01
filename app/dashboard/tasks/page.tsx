@@ -9,6 +9,7 @@ export default function TaskPage() {
 
     const [tasks, setTasks] = useState<any[]>
         ([])
+    const [taskToEdit, setTaskToEdit] = useState<any>(null)
     const [loading, setLoading] = useState(true)
 
     const fetchTasks = async () => {
@@ -114,7 +115,10 @@ export default function TaskPage() {
                 </div>
 
                 <button
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => {
+                        setTaskToEdit(null)
+                        setIsModalOpen(true)
+                    }}
                     className="bg-[#635BFF] flex items-center gap-1.5 hover:bg-[#534be0] text-white font-semibold py-2.5 px-4 rounded-xl shadow-sm text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#635BFF]/50 focus:ring-offset-2"
                 >
                     <Plus className="w-4 h-4" />
@@ -226,6 +230,16 @@ export default function TaskPage() {
                                     Hapus
                                 </button>
 
+                                <button
+                                    onClick={() => {
+                                        setTaskToEdit(task)
+                                        setIsModalOpen(true)
+                                    }}
+                                    className="text-blue-400 font-semibold hover:text-blue-600 p-2 text-xs rounded-lg hover:bg-blue-50 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+                                >
+                                    Edit
+                                </button>
+
                             </div>
                         </div>
                     ))
@@ -245,6 +259,8 @@ export default function TaskPage() {
             <TaskModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
+                taskToEdit={taskToEdit}
+                onSave={fetchTasks}
             />
         </div>
     )

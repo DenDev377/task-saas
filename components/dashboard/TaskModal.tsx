@@ -1,20 +1,36 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 
 interface TaskModalProps {
     isOpen: boolean;
     onClose: () => void;
+    taskToEdit?: any;
+    onSave?: () => void;
 }
 
-export default function TaskModal({ isOpen, onClose }: TaskModalProps) {
+export default function TaskModal({ isOpen, onClose, taskToEdit, onSave }: TaskModalProps) {
     const [title, setTitle] = useState("");
     const [category, setCategory] = useState("");
     const [priority, setPriority] = useState("MEDIUM");
     const [dueDate, setDueDate] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+
+    useEffect(() => {
+        if (taskToEdit) {
+            setTitle(taskToEdit.title);
+            setCategory(taskToEdit.category || "");
+            setPriority(taskToEdit.priority);
+            setDueDate(taskToEdit.dueDate ? new Date(taskToEdit.dueDate).toISOString().split('T')[0] : "");
+        } else {
+            setTitle("");
+            setCategory("");
+            setPriority("MEDIUM");
+            setDueDate("");
+        }
+    }, [taskToEdit])
 
     if (!isOpen) return null;
 
@@ -24,9 +40,12 @@ export default function TaskModal({ isOpen, onClose }: TaskModalProps) {
         setError("")
 
         try {
+            const apiUrl = taskToEdit ? `/api/tasks/${taskToEdit.id}` : "/api/tasks";
+            const apiMethod = taskToEdit ? "PUT" : "POST";
+
             //request post ke api
-            const res = await fetch("/api/tasks", {
-                method: "POST",
+            const res = await fetch(apiUrl, {
+                method: apiMethod,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     title, category, priority, dueDate
@@ -41,6 +60,7 @@ export default function TaskModal({ isOpen, onClose }: TaskModalProps) {
                 setCategory("");
                 setPriority("MEDIUM");
                 setDueDate("");
+                if (onSave) onSave();
                 onClose();
             }
         } catch (err) {
@@ -119,6 +139,7 @@ export default function TaskModal({ isOpen, onClose }: TaskModalProps) {
                             Batal
                         </button>
                         <button
+
                             type="submit"
                             className="px-6 py-2 text-sm font-bold text-white bg-[#635BFF] hover:bg-[#534be0] rounded-xl shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#635BFF]/50 focus:ring-offset-2"
                         >

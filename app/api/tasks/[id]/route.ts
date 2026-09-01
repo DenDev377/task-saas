@@ -62,3 +62,38 @@ export async function PATCH(
         return NextResponse.json({ message: "Gagal memperbarui tugas." }, { status: 500 })
     }
 }
+
+export async function PUT(
+    req: Request,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    try {
+        const session = await getServerSession(authOptions);
+        if (!session?.user?.id) {
+            return NextResponse.json({
+                message: "Anda belum login."
+            }, { status: 401 })
+        }
+
+        const resolvedParams = await params;
+        const taskId = parseInt(resolvedParams.id)
+
+        const body = await req.json();
+        const { title, category, priority, dueDate } = body;
+
+        const updateTask = await prisma.task.update({
+            where: { id: taskId },
+            data: {
+                title,
+                category,
+                priority,
+                dueDate: dueDate ? new Date(dueDate) : null
+            }
+        })
+
+        return NextResponse.json(updateTask, { status: 200 })
+    } catch (error) {
+        console.error("ERROR EDIT TASK", error)
+        return NextResponse.json({ message: "Gagal mengedit tugas." }, { status: 500 })
+    }
+}
