@@ -66,10 +66,28 @@ export default function TaskPage() {
         },
     ]
 
-    const toggleTaskCompletion = (taskId: number) => {
+    const toggleTaskCompletion = async (taskId: number) => {
+        const taskToUpdate = tasks.find((t) => t.id === taskId)
+        if (!taskToUpdate) return;
+
+        const newCompletedStatus = !taskToUpdate.completed;
+
         setTasks(tasks.map(task =>
-            task.id === taskId ? { ...task, completed: !task.completed, status: task.completed ? "In Progress" : "Done" } : task
+            task.id === taskId ? { ...task, completed: newCompletedStatus, status: newCompletedStatus ? "COMPLETED" : "IN_PROGRESS" } : task
         ))
+
+        try {
+            await fetch(`/api/tasks/${taskId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    completed: newCompletedStatus
+                })
+            })
+        } catch (error) {
+            console.error("Gagal singkronisasi API perbarui status tugas", error)
+        }
+
     }
 
     const filteredTasks = tasks.filter(task => {
