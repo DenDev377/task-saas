@@ -27,7 +27,7 @@ export default function Navbar() {
       showTaskButton: false,
     },
     "/dashboard/worklogs": {
-      title: "Projects",
+      title: "Worklogs",
       badge: "Operasional",
       badgeColor: "bg-green-100 text-green-600",
       showTaskButton: true,
