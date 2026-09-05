@@ -6,7 +6,8 @@ import WorklogModal from "@/components/dashboard/WorklogModal";
 export default function WorklogsPage() {
     const [logs, setLogs] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [isModalOpen, setIsModalOpen] = useState(false); // Untuk modal (tahap selanjutnya)
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [logToEdit, setLogToEdit] = useState<any>(null);
 
     // FITUR GET: Mengambil Histori Log Kerja
     const fetchLogs = async () => {
@@ -18,6 +19,20 @@ export default function WorklogsPage() {
             console.error("Gagal mengambil log kerja", error);
         } finally {
             setLoading(false);
+        }
+    }
+
+    const handleDelete = async (id: number) => {
+        if (!confirm("Beneran mau hapus catatan kerja ini?")) return;
+
+        // Optimistic UI deletion
+        setLogs(logs.filter((log) => log.id !== id));
+
+        try {
+            await fetch(`/api/worklogs/${id}`, { method: "DELETE" });
+        } catch (error) {
+            console.error("Gagal menghapus log:", error);
+            fetchLogs(); // Rollback on failure
         }
     }
 
@@ -38,7 +53,10 @@ export default function WorklogsPage() {
                 </div>
 
                 <button
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => {
+                        setLogToEdit(null);
+                        setIsModalOpen(true);
+                    }}
                     className="bg-[#635BFF] flex items-center gap-1.5 hover:bg-[#534be0] text-white font-semibold py-2.5 px-4 rounded-xl shadow-sm text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#635BFF]/50"
                 >
                     <Plus className="w-4 h-4" />
@@ -79,18 +97,19 @@ export default function WorklogsPage() {
                                 <th scope="col" className="px-6 py-4 font-semibold">Tanggal Log</th>
                                 <th scope="col" className="px-6 py-4 font-semibold">Durasi</th>
                                 <th scope="col" className="px-6 py-4 font-semibold">Catatan Laporan</th>
+                                <th scope="col" className="px-6 py-4 font-semibold text-right">Aksi</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
                             {loading && (
                                 <tr>
-                                    <td colSpan={4} className="text-center py-8 text-slate-400 animate-pulse">Memuat data log kerja...</td>
+                                    <td colSpan={5} className="text-center py-8 text-slate-400 animate-pulse">Memuat data log kerja...</td>
                                 </tr>
                             )}
 
                             {!loading && logs.length === 0 && (
                                 <tr>
-                                    <td colSpan={4} className="text-center py-12 text-slate-500">
+                                    <td colSpan={5} className="text-center py-12 text-slate-500">
                                         <Clock className="w-10 h-10 mx-auto text-slate-300 mb-3" />
                                         <p className="font-medium text-slate-700">Belum ada jam kerja yang dicatat.</p>
                                         <p className="text-sm mt-1">Klik [Tambah Log Baru] untuk mulai menghitung.</p>
@@ -124,6 +143,28 @@ export default function WorklogsPage() {
                                     <td className="px-6 py-4 text-slate-600 max-w-sm">
                                         <p className="truncate" title={log.note}>{log.note || "-"}</p>
                                     </td>
+                                    
+                                    <td className="px-6 py-4 text-right">
+                                        <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button 
+                                                onClick={() => {
+                                                    setLogToEdit(log);
+                                                    setIsModalOpen(true);
+                                                }}
+                                                className="p-2 text-indigo-500 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors"
+                                                title="Edit"
+                                            >
+                                                Edit
+                                            </button>
+                                            <button 
+                                                onClick={() => handleDelete(log.id)}
+                                                className="p-2 text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
+                                                title="Hapus"
+                                            >
+                                                Hapus
+                                            </button>
+                                        </div>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -131,13 +172,13 @@ export default function WorklogsPage() {
                 </div>
             </div>
 
-            <WorklogModal 
-                isOpen={isModalOpen} 
-                onClose={() => setIsModalOpen(false)} 
+            <WorklogModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
                 onSuccess={() => {
                     setIsModalOpen(false);
                     fetchLogs(); // Auto-refresh!
-                }} 
+                }}
             />
         </div>
     )

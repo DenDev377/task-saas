@@ -5,9 +5,10 @@ interface WorklogModalProps {
     isOpen: boolean;
     onClose: () => void;
     onSuccess: () => void;
+    logToEdit?: any;
 }
 
-export default function WorklogModal({ isOpen, onClose, onSuccess }: WorklogModalProps) {
+export default function WorklogModal({ isOpen, onClose, onSuccess, logToEdit }: WorklogModalProps) {
     const [tasks, setTasks] = useState<any[]>([]);
     const [taskId, setTaskId] = useState("");
     const [hours, setHours] = useState("");
@@ -34,13 +35,21 @@ export default function WorklogModal({ isOpen, onClose, onSuccess }: WorklogModa
         };
         fetchTasks();
         
-        // Reset form
-        setTaskId("");
-        setHours("");
-        setNote("");
-        setDate(new Date().toISOString().split('T')[0]); // Default to today
+        // Populate or reset form
+        if (logToEdit) {
+            setTaskId(logToEdit.taskId.toString());
+            setHours(logToEdit.hours.toString());
+            setNote(logToEdit.note || "");
+            setDate(logToEdit.date ? new Date(logToEdit.date).toISOString().split('T')[0] : "");
+        } else {
+            setTaskId("");
+            setHours("");
+            setNote("");
+            setDate(new Date().toISOString().split('T')[0]); // Default to today
+        }
+        
         setError("");
-    }, [isOpen]);
+    }, [isOpen, logToEdit]);
 
     if (!isOpen) return null;
 
@@ -61,8 +70,11 @@ export default function WorklogModal({ isOpen, onClose, onSuccess }: WorklogModa
         setLoading(true);
 
         try {
-            const res = await fetch("/api/worklogs", {
-                method: "POST",
+            const apiUrl = logToEdit ? `/api/worklogs/${logToEdit.id}` : "/api/worklogs";
+            const apiMethod = logToEdit ? "PUT" : "POST";
+
+            const res = await fetch(apiUrl, {
+                method: apiMethod,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     taskId,
@@ -91,8 +103,8 @@ export default function WorklogModal({ isOpen, onClose, onSuccess }: WorklogModa
             <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
                 <div className="flex justify-between items-center p-6 border-b border-slate-100 bg-slate-50/50">
                     <div>
-                        <h2 className="text-xl font-bold text-slate-800">Catat Log Kerja</h2>
-                        <p className="text-slate-500 text-sm mt-0.5">Berapa jam yang Anda habiskan untuk tugas ini?</p>
+                        <h2 className="text-xl font-bold text-slate-800">{logToEdit ? "Edit Log Kerja" : "Catat Log Kerja"}</h2>
+                        <p className="text-slate-500 text-sm mt-0.5">{logToEdit ? "Ubah catatan log lama Anda." : "Berapa jam yang Anda habiskan untuk tugas ini?"}</p>
                     </div>
                     <button 
                         onClick={onClose}
@@ -192,7 +204,7 @@ export default function WorklogModal({ isOpen, onClose, onSuccess }: WorklogModa
                             disabled={loading}
                             className="px-5 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-sm transition-all shadow-indigo-600/20 disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
                         >
-                            {loading ? "Menyimpan..." : "Simpan Log Kerja"}
+                            {loading ? "Menyimpan..." : (logToEdit ? "Update Perubahan" : "Simpan Log Kerja")}
                         </button>
                     </div>
                 </form>
