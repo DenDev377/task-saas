@@ -5,6 +5,8 @@ import { Priority } from "@prisma/client";
 export default function DashboardPage() {
 
   const [task, setTask] = useState<any[]>([]);
+  const [totalHours, setTotalHours] = useState(0);
+
   useEffect(() => {
     const fetchTask = async () => {
       try {
@@ -18,8 +20,17 @@ export default function DashboardPage() {
         console.error("Gagal terhubung ke API", error)
       }
     }
-    fetchTask()
 
+    const fetchWorklogs = async () => {
+      try {
+        const res = await fetch("/api/worklogs");
+        const data = await res.json();
+        if (res.ok) setTotalHours(data.reduce((acc: number, log: any) => acc + log.hours, 0));
+      } catch (err) { }
+    }
+
+    fetchTask()
+    fetchWorklogs()
 
   }, [])
   const totalTugas = task.length;
@@ -65,7 +76,7 @@ export default function DashboardPage() {
             </div>
           </div>
           <div>
-            <p className="text-3xl font-bold text-slate-900 mt-2">34j</p>
+            <p className="text-3xl font-bold text-slate-900 mt-2">{totalHours}j</p>
           </div>
         </div>
 
@@ -87,14 +98,13 @@ export default function DashboardPage() {
       <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
 
 
-        <div className="lg:col-span-2 bg-white border border-slate-250 rounded-xl shadow-sm overflow-hidden">
+        <div className="lg:col-span-3 bg-white border border-slate-250 rounded-xl shadow-sm overflow-hidden">
           {/* Table Header Area */}
           <div className="px-6 py-5 border-b border-slate-250 flex items-center justify-between">
-            <h2 className="text-lg font-bold text-slate-800">Tugas Aktif</h2>
-            <button className="bg-neutral-50 hover:bg-neutral-100 text-[#635BFF] font-semibold py-2.5 px-4 rounded-xl text-sm transition-all">
+            <h2 className="text-lg font-bold text-slate-800">Tugas Aktif Terkini</h2>
+            <a href="/dashboard/tasks" className="bg-neutral-50 hover:bg-neutral-100 text-[#635BFF] font-semibold py-2.5 px-4 rounded-xl text-sm transition-all focus:ring focus:ring-indigo-100">
               Lihat Semua
-            </button>
-
+            </a>
           </div>
 
           <div className="overflow-x-auto">
@@ -109,96 +119,33 @@ export default function DashboardPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {/* tasks.slice(0, 5) berfungsi membatasi data agar HANYA 5 terbanyak muncul */}
                 {task.slice(0, 5).map((task: any) => (
                   <tr key={task.id} className="hover:bg-slate-50/50 transition-colors">
                     <td className="px-6 py-4 font-medium text-slate-900">{task.title}</td>
-
-                    <td className="px-6 py-4">
-                      {renderPriorityBadge(task.priority)}
-                    </td>
-
-                    <td className="px-6 py-4 text-slate-600">
-                      {/* Jika nama tidak ada, kita tampilkan - */}
-                      {task.assignee?.name || "-"}
-                    </td>
-
+                    <td className="px-6 py-4">{renderPriorityBadge(task.priority)}</td>
+                    <td className="px-6 py-4 text-slate-600">{task.assignee?.name || "-"}</td>
                     <td className="px-6 py-4 text-slate-600">
                       {task.dueDate ? new Date(task.dueDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) : "-"}
                     </td>
-
                     <td className="px-6 py-4">
                       {task.completed ? (
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-600">
-                          Selesai
-                        </span>
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-600">Selesai</span>
                       ) : (
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-[#635BFF]/10 text-[#635BFF]">
-                          Pending
-                        </span>
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-[#635BFF]/10 text-[#635BFF]">Pending</span>
                       )}
                     </td>
                   </tr>
                 ))}
-
-
                 {task.length === 0 && (
                   <tr>
                     <td colSpan={5} className="text-center py-6 text-slate-400">Belum ada tugas!</td>
                   </tr>
                 )}
               </tbody>
-
             </table>
           </div>
         </div>
 
-
-        <div className="lg:col-span-1 bg-white border border-slate-250 rounded-xl shadow-sm p-6 flex flex-col h-full">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-bold text-slate-800">Aktivitas Terbaru</h2>
-
-          </div>
-
-          <div className="flex-1 space-y-6">
-
-            <div className="flex gap-4">
-              <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 shrink-0">
-                <span className="text-xs font-bold">JD</span>
-              </div>
-              <div>
-                <p className="text-sm text-slate-800 font-medium leading-snug">John Doe <span className="text-slate-500 font-normal">menyelesaikan tugas</span> Landing Page</p>
-                <p className="text-xs text-slate-400 mt-1">2 jam yang lalu</p>
-              </div>
-            </div>
-
-
-            <div className="flex gap-4">
-              <div className="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
-                <span className="text-xs font-bold">SM</span>
-              </div>
-              <div>
-                <p className="text-sm text-slate-800 font-medium leading-snug">Sarah M. <span className="text-slate-500 font-normal">menambahkan log waktu di</span> Bug Login</p>
-                <p className="text-xs text-slate-400 mt-1">4 jam yang lalu</p>
-              </div>
-            </div>
-
-
-            <div className="flex gap-4">
-              <div className="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 shrink-0">
-                <span className="text-xs font-bold">AK</span>
-              </div>
-              <div>
-                <p className="text-sm text-slate-800 font-medium leading-snug">Alex K. <span className="text-slate-500 font-normal">mengubah prioritas</span> Database Migration <span className="text-slate-500 font-normal">ke Tinggi</span></p>
-                <p className="text-xs text-slate-400 mt-1">Kemarin</p>
-              </div>
-            </div>
-          </div>
-
-          <button className="w-full mt-6 py-2.5 border border-slate-250 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
-            Lihat Semua Aktivitas
-          </button>
-        </div>
 
       </div>
     </div>

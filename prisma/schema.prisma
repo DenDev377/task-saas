@@ -6,7 +6,6 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  
 }
 
 enum Role {
@@ -37,14 +36,28 @@ model Task {
 
   // Relasi Pembuat Task (Admin/Lead)
   createdById Int
-  createdBy   User     @relation("CreatedTasks", fields: [createdById], references: [id])
+  createdBy   User @relation("CreatedTasks", fields: [createdById], references: [id])
 
   // Relasi Pengerja Task (Member)
-  assigneeId  Int
-  assignee    User     @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  assigneeId Int
+  assignee   User @relation("AssignedTasks", fields: [assigneeId], references: [id])
 
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  worklogs  Worklog[]
+}
+
+model Worklog {
+  id        Int      @id @default(autoincrement())
+  taskId    Int
+  task      Task     @relation(fields: [taskId], references: [id])
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  hours     Float
+  date      DateTime
+  note      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model User {
@@ -58,6 +71,7 @@ model User {
   createdTasks  Task[] @relation("CreatedTasks")
   assignedTasks Task[] @relation("AssignedTasks")
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  worklogs  Worklog[]
 }

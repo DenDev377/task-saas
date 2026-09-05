@@ -32,8 +32,8 @@ export default function Navbar() {
       badgeColor: "bg-green-100 text-green-600",
       showTaskButton: true,
     },
-    "/dashboard/calendar": {
-      title: "Calendar",
+    "/dashboard/team": {
+      title: "Team",
       badge: "Operasional",
       badgeColor: "bg-green-100 text-green-600",
       showTaskButton: true,
