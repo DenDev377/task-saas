@@ -14,7 +14,7 @@ export async function POST(req: Request) {
         };
 
         const body = await req.json()
-        const { title, category, priority, dueDate } = body
+        const { title, category, priority, dueDate, assigneeId } = body
 
         if (!title) {
             return NextResponse.json({
@@ -29,7 +29,9 @@ export async function POST(req: Request) {
                 priority,
                 dueDate: dueDate ? new Date(dueDate) : null,
                 createdById: parseInt(session.user.id),
-                assigneeId: parseInt(session.user.id),
+                assigneeId: (session.user as any).role === 'ADMIN' && assigneeId 
+                    ? parseInt(assigneeId) 
+                    : parseInt(session.user.id),
             }
         })
 
@@ -56,11 +58,12 @@ export async function GET(req: Request) {
             }, { status: 401 })
 
         }
+        const whereClause = (session.user as any).role === "ADMIN"
+            ? {}
+            : { assigneeId: parseInt(session.user.id as string) };
+
         const userTasks = await prisma.task.findMany({
-            where: {
-                assigneeId:
-                    parseInt(session.user.id as string)
-            },
+            where: whereClause,
             include: {
                 assignee: true,
             },

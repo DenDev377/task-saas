@@ -211,12 +211,16 @@ export default function TaskPage() {
                             <div className="flex items-center gap-4">
 
                                 {task.assignee?.avatar && (
-                                    <div className="flex -space-x-2 hidden sm:flex">
+                                    <div className="hidden sm:flex items-center gap-2 bg-slate-50 px-2 py-1 rounded-lg border border-slate-100">
+                                        <div className="hidden md:flex flex-col justify-center text-right">
+                                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider leading-none mb-0.5">Assignee</span>
+                                            <span className="text-xs font-semibold text-slate-700 leading-none">{task.assignee.name?.split(' ')[0] || "User"}</span>
+                                        </div>
                                         <img
                                             src={task.assignee.avatar}
                                             alt={task.assignee.name || "Assignee"}
                                             title={task.assignee.name || "User"}
-                                            className="w-7 h-7 rounded-full border-2 border-white object-cover shadow-sm bg-slate-100"
+                                            className="w-7 h-7 rounded-full border-2 border-white object-cover shadow-sm bg-indigo-50"
                                         />
                                     </div>
                                 )}

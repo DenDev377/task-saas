@@ -93,6 +93,7 @@ export default function WorklogsPage() {
                     <table className="w-full text-sm text-left">
                         <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-200">
                             <tr>
+                                <th scope="col" className="px-6 py-4 font-semibold">Pegawai</th>
                                 <th scope="col" className="px-6 py-4 font-semibold">Tugas Terkait</th>
                                 <th scope="col" className="px-6 py-4 font-semibold">Tanggal Log</th>
                                 <th scope="col" className="px-6 py-4 font-semibold">Durasi</th>
@@ -103,13 +104,13 @@ export default function WorklogsPage() {
                         <tbody className="divide-y divide-slate-100">
                             {loading && (
                                 <tr>
-                                    <td colSpan={5} className="text-center py-8 text-slate-400 animate-pulse">Memuat data log kerja...</td>
+                                    <td colSpan={6} className="text-center py-8 text-slate-400 animate-pulse">Memuat data log kerja...</td>
                                 </tr>
                             )}
 
                             {!loading && logs.length === 0 && (
                                 <tr>
-                                    <td colSpan={5} className="text-center py-12 text-slate-500">
+                                    <td colSpan={6} className="text-center py-12 text-slate-500">
                                         <Clock className="w-10 h-10 mx-auto text-slate-300 mb-3" />
                                         <p className="font-medium text-slate-700">Belum ada jam kerja yang dicatat.</p>
                                         <p className="text-sm mt-1">Klik [Tambah Log Baru] untuk mulai menghitung.</p>
@@ -119,6 +120,21 @@ export default function WorklogsPage() {
 
                             {logs.map((log) => (
                                 <tr key={log.id} className="hover:bg-slate-50/50 transition-colors group">
+                                    <td className="px-6 py-4">
+                                        {log.user ? (
+                                            <div className="flex items-center gap-2">
+                                                <img 
+                                                    src={log.user.avatar} 
+                                                    alt={log.user.name} 
+                                                    title={log.user.name}
+                                                    className="w-7 h-7 rounded-full border border-slate-200 object-cover shadow-sm bg-slate-100 flex-shrink-0"
+                                                />
+                                                <span className="font-semibold text-slate-700 text-sm truncate max-w-[120px]">{log.user.name?.split(' ')[0]}</span>
+                                            </div>
+                                        ) : (
+                                            <span className="text-slate-400 italic text-sm">-</span>
+                                        )}
+                                    </td>
                                     <td className="px-6 py-4">
                                         <div className="flex items-start gap-2 max-w-[200px]">
                                             <CheckSquare className="w-4 h-4 text-indigo-400 mt-0.5 flex-shrink-0" />

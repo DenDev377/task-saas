@@ -16,12 +16,14 @@ export async function GET(req: Request) {
 
         //ambil semua worklog
 
+        // Jika ADMIN, kosongkan klausa "where" agar semua data terambil
+        const whereClause = (session.user as any).role === "ADMIN" ? {} : { userId: userId };
+
         const worklogs = await prisma.worklog.findMany({
-            where: {
-                userId: userId
-            },
+            where: whereClause,
             include: {
-                task: true
+                task: true,
+                user: true // PENTING: Untuk menampilkan profil pegawai di UI
             },
             orderBy: {
                 date: "desc"

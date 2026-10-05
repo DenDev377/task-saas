@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 interface TaskModalProps {
     isOpen: boolean;
@@ -11,6 +12,9 @@ interface TaskModalProps {
 }
 
 export default function TaskModal({ isOpen, onClose, taskToEdit, onSave }: TaskModalProps) {
+    const { data: session } = useSession();
+    const [team, setTeam] = useState<any[]>([]);
+    const [assigneeId, setAssigneeId] = useState("");
     const [title, setTitle] = useState("");
     const [category, setCategory] = useState("");
     const [priority, setPriority] = useState("MEDIUM");
@@ -19,16 +23,27 @@ export default function TaskModal({ isOpen, onClose, taskToEdit, onSave }: TaskM
     const [error, setError] = useState("");
 
     useEffect(() => {
+        if ((session?.user as any)?.role === "ADMIN") {
+            fetch("/api/team")
+                .then(res => res.json())
+                .then(data => setTeam(data))
+                .catch(err => console.error("Gagal mendapatkan daftar tim"));
+        }
+    }, [session]);
+
+    useEffect(() => {
         if (taskToEdit) {
             setTitle(taskToEdit.title);
             setCategory(taskToEdit.category || "");
             setPriority(taskToEdit.priority);
             setDueDate(taskToEdit.dueDate ? new Date(taskToEdit.dueDate).toISOString().split('T')[0] : "");
+            setAssigneeId(taskToEdit.assigneeId ? String(taskToEdit.assigneeId) : "");
         } else {
             setTitle("");
             setCategory("");
             setPriority("MEDIUM");
             setDueDate("");
+            setAssigneeId("");
         }
     }, [taskToEdit])
 
@@ -48,7 +63,7 @@ export default function TaskModal({ isOpen, onClose, taskToEdit, onSave }: TaskM
                 method: apiMethod,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    title, category, priority, dueDate
+                    title, category, priority, dueDate, assigneeId: assigneeId || undefined
                 })
 
             })
@@ -60,6 +75,7 @@ export default function TaskModal({ isOpen, onClose, taskToEdit, onSave }: TaskM
                 setCategory("");
                 setPriority("MEDIUM");
                 setDueDate("");
+                setAssigneeId("");
                 if (onSave) onSave();
                 onClose();
             }
@@ -129,6 +145,24 @@ export default function TaskModal({ isOpen, onClose, taskToEdit, onSave }: TaskM
                             />
                         </div>
                     </div>
+
+                    {(session?.user as any)?.role === "ADMIN" && (
+                        <div>
+                            <label className="block text-sm font-semibold text-slate-700 mb-1.5">Mendelegasikan Ke (Assign To)</label>
+                            <select
+                                value={assigneeId}
+                                onChange={(e) => setAssigneeId(e.target.value)}
+                                className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#635BFF]/30 focus:border-[#635BFF] transition-all text-sm appearance-none"
+                            >
+                                <option value="">(Tugaskan pada diri sendiri)</option>
+                                {team.map((user) => (
+                                    <option key={user.id} value={user.id}>
+                                        {user.name} ({user.role})
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
 
                     <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-100 mt-6">
                         <button
